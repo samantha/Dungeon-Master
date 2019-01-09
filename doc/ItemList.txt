@@ -1,0 +1,9 @@
+Health Potion,25,../img/potion.png
+Bag o' Gold,20,../img/gold.png
+Shield,15,../img/shield.png
+Helm,10,../img/helm.png
+Belt,2,../img/belt.png
+Ring,5,../img/ring.png
+Gloves,5,../img/gloves.png
+Boots,10,../img/boots.png
+Ringmail,15,../img/ringmail.png
