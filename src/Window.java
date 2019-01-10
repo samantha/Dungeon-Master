@@ -115,7 +115,7 @@ public class Window extends JFrame
 			ig = ItemGenerator.getInstance();
 			eg = EnemyGenerator.getInstance();
 
-			gameMap.loadMap(mapNum);
+			gameMap.loadMap();
 			hero = new Hero("Link", gameMap);
 
 			blackBorder = BorderFactory.createLineBorder(Color.BLACK);
@@ -825,12 +825,7 @@ public class Window extends JFrame
 					hero.increaseMaxHP(10);
 					mapNum++;
 
-					if(mapNum > 3)
-					{
-						mapNum = 1;
-					}
-
-					gameMap.loadMap(mapNum);
+					gameMap.loadMap();
 					gameMap.reveal(hero.getLocation());
 				}
 			}

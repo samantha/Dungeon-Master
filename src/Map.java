@@ -1,10 +1,13 @@
 import java.io.*;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.Arrays;
 import java.awt.Point;
 import javax.swing.*;
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 /**
  * Map Class - representation of a map
@@ -24,6 +27,12 @@ public class Map extends Rectangle
 	/** 5x5 grid of hidden/revealed elements */
 	private boolean [][] revealed;
 
+	/** configurable probability of placing an item on map */
+	private double probabilities_item;
+
+	/** configurable probability of placing a monster on map */
+	private double probabilities_monster;
+
 	/** Initialize the map and boolean values */
 	private Map()
 	{
@@ -31,9 +40,18 @@ public class Map extends Rectangle
 
 		// initialize covered map
 		map = new char[5][5];
+		// Fill each row with 1.0
+		for (char[] row: map)
+		{
+			Arrays.fill(row, 'n');
+		}
 
 		// all values will be false by default
 		revealed = new boolean[5][5];
+
+		// set probabilites for items and monsters
+		probabilities_item = 0.3;
+        probabilities_monster = 0.3;
 	}
 
 	/**
@@ -50,54 +68,59 @@ public class Map extends Rectangle
 	}
 
 	/**
-	 * Read in text file to generate a map
+	 * Insert random start and finish elements
+	 */
+	public boolean insertStartElements(char element, int row, int col)
+	{
+		if(map[row][col] == 'n')
+		{
+			map[row][col] = element;
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Insert random monster and item elements
+	 */
+	public boolean insertElements(double randomNum, int row, int col)
+	{
+		// store elements in map
+		if(map[row][col] == 'n')
+		{
+			if(randomNum < probabilities_item)
+			{
+				map[row][col] = 'i';
+			}
+			else if(randomNum < probabilities_item + probabilities_monster)
+			{
+				map[row][col] = 'm';
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Generate a random map
 	 * @param mapNum
 	 */
-	public void loadMap(int mapNum)
+	public void loadMap()
 	{
-		int array1DIndex = 0;
-		char gameObject[] = new char[25];
+		Random rand = new Random();
+		double randomNum;
+		insertStartElements('s', rand.nextInt(map.length), rand.nextInt(map.length));
+		while(!insertStartElements('f', rand.nextInt(map.length), rand.nextInt(map.length)));
 
-		try
-		{
-			// open file with enemy data and read from it
-			String filename = "../doc/Map" + mapNum + ".txt";
-			File mapFile = new File (filename);
-			Scanner read = new Scanner(mapFile);
-			do
-			{
-				String line = read.nextLine();
-				line = line.replaceAll("\\s+","");
-
-				for(int i = 0; i < line.length(); i++)
-				{
-					if(array1DIndex < gameObject.length)
-					{
-						gameObject[array1DIndex] = line.charAt(i);
-				 		array1DIndex++;
-					}
-				}
-
-			}while(read.hasNext());
-			read.close();
-		}
-		catch(FileNotFoundException fnf)
-		{
-			System.out.println("File was not found");
-		}
-
-		array1DIndex = 0;
 		// store elements in map
 		for (int i = 0; i < map.length; i++)
 		{
 			for(int j = 0; j < map[i].length; j++)
 			{
-				if(array1DIndex < gameObject.length)
-				{
-					map[i][j] = gameObject[array1DIndex];
-					revealed[i][j] = false;
-					array1DIndex++;
-				}
+				randomNum = rand.nextFloat();
+				insertElements(randomNum, i, j);
+				revealed[i][j] = false;
 			}
 		}
 	}
