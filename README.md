@@ -17,7 +17,7 @@ Outputs and takes input from mouse and keyboard (numerical keypad and arrows)
 
 Below is an example of two random 'Medium" Sudokus created and able to be solved by the program
 
-![Screenshot](dungeon.png)
+![Screenshot](./img/dungeon.png)
 
 ## Authors
 
