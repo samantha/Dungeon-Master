@@ -1,6 +1,6 @@
 # Dungeon Master
 
-Dungeon Master made by Samantha Hangsan, designed for OpenJDK 10. Gives user option to generate a configurable map. Also have the option to have fight monsters with physical and magical attacks, pick up armor and items, heal, and buy or sell items.
+Dungeon Master made by Samantha Hangsan, designed for OpenJDK 10. Gives user option to generate a configurable map. Also have the option to have fight monsters with physical and magical attacks, pick up armor and items, level up, heal self, run from battle, and buy or sell items.
 
 ## Installation
 
