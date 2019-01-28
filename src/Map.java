@@ -33,13 +33,21 @@ public class Map extends Rectangle
 	/** configurable probability of placing a monster on map */
 	private double probabilities_monster;
 
+	private int NUM_ROWS;
+
+	private int NUM_COLS;
+
 	/** Initialize the map and boolean values */
 	private Map()
 	{
 		setBounds(10, 10, 200, 200);
 
+		// Configurable settings
+		NUM_ROWS = 10;
+		NUM_COLS = 10;
+
 		// initialize covered map
-		map = new char[5][5];
+		map = new char[NUM_ROWS][NUM_COLS];
 		// Fill each row with 1.0
 		for (char[] row: map)
 		{
@@ -47,7 +55,7 @@ public class Map extends Rectangle
 		}
 
 		// all values will be false by default
-		revealed = new boolean[5][5];
+		revealed = new boolean[NUM_ROWS][NUM_COLS];
 
 		// set probabilites for items and monsters
 		probabilities_item = 0.3;
@@ -103,6 +111,21 @@ public class Map extends Rectangle
 	}
 
 	/**
+	 * Generate a maze using randomized variant of Kruskal's algorithm.
+	 * Kruskal's algorithm is a method for producing a minimal spanning tree
+	 * from a weighted graph. Randomized to make a maze.
+	 *
+	 * The algorithm is implemented as follows:
+	 *
+	 * (1) Designate the "walls" between cells as edges.
+	 * (2) Pull out an edge at random (originally edge with the lowest weight).
+	 * (3) If the selected edge connects two disjoint trees, join the trees.
+	 * (4) Otherwise, throw that edge away.
+	 * (5) Repeat at Step 2 until there are no more edges left.
+	 *
+	 */
+
+	/**
 	 * Generate a random map
 	 * @param mapNum
 	 */
@@ -110,8 +133,8 @@ public class Map extends Rectangle
 	{
 		Random rand = new Random();
 		double randomNum;
-		insertStartElements('s', rand.nextInt(map.length), rand.nextInt(map.length));
-		while(!insertStartElements('f', rand.nextInt(map.length), rand.nextInt(map.length)));
+		insertStartElements('s', rand.nextInt(map.length), rand.nextInt(map[0].length));
+		while(!insertStartElements('f', rand.nextInt(map.length), rand.nextInt(map[0].length)));
 
 		// store elements in map
 		for (int i = 0; i < map.length; i++)
@@ -121,7 +144,9 @@ public class Map extends Rectangle
 				randomNum = rand.nextFloat();
 				insertElements(randomNum, i, j);
 				revealed[i][j] = false;
+				System.out.print(map[i][j] + " ");
 			}
+			System.out.println();
 		}
 	}
 
@@ -138,19 +163,23 @@ public class Map extends Rectangle
 
 		g.setColor(Color.WHITE);
 
-		int side = 200;
+		int SIDE_LENGTH = 100;
+		int IMG_WIDTH = 75;
+		int IMG_HEIGHT = 75;
+		int IMG_LOC = 12;
 
 		for (int i = 0; i < map.length; i++)
 		{
 			for(int j = 0; j < map[i].length; j++)
 			{
-				g.drawRect((side * j), 0 + (side * i), side, side);
+				// g.drawLine(10, 10, 20, 20);
+				// g.drawRect((SIDE_LENGTH * j), 0 + (SIDE_LENGTH * i), SIDE_LENGTH, SIDE_LENGTH);
 				if (i == x && j == y)
 				{
 					try
 					{
 						BufferedImage img = ImageIO.read(new File("../img/link.png"));
-						g.drawImage(img, 25 + (side * j), 25 + (side * i), 150, 150, null);
+						g.drawImage(img, IMG_LOC + (SIDE_LENGTH * j), IMG_LOC + (SIDE_LENGTH * i), IMG_WIDTH, IMG_HEIGHT, null);
 					}
 					catch(FileNotFoundException e)
 					{
@@ -162,11 +191,11 @@ public class Map extends Rectangle
 					}
 				}
 				// if hidden, room is covered
-				else if(revealed[i][j] == false)
-				{
-					g.setFont(new Font("Calibri", Font.PLAIN, 50));
-					g.drawString("X", 90 + (side * j), 120 + (side * i));
-				}
+				// else if(revealed[i][j] == false)
+				// {
+				// 	g.setFont(new Font("Calibri", Font.PLAIN, 50));
+				// 	g.drawString("X", 90 + (SIDE_LENGTH * j), 120 + (SIDE_LENGTH * i));
+				// }
 				// if revealed, show element
 				else if(revealed[i][j] == true)
 				{
@@ -177,30 +206,30 @@ public class Map extends Rectangle
 						if(map[i][j] == 's')
 						{
 							img = ImageIO.read(new File("../img/shop.png"));
-							g.drawImage(img, 25 + (side * j), 25 + (side * i), 150, 150, null);
+							g.drawImage(img, IMG_LOC + (SIDE_LENGTH * j), IMG_LOC + (SIDE_LENGTH * i), IMG_WIDTH, IMG_HEIGHT, null);
 						}
 
 						else if(map[i][j] == 'n')
 						{
 							img = ImageIO.read(new File("../img/ghost.png"));
-							g.drawImage(img, 25 + (side * j), 25 + (side * i), 150, 150, null);
+							g.drawImage(img, IMG_LOC + (SIDE_LENGTH * j), IMG_LOC + (SIDE_LENGTH * i), IMG_WIDTH, IMG_HEIGHT, null);
 						}
 
 						else if(map[i][j] == 'm')
 						{
 							img = ImageIO.read(new File("../img/monster.png"));
-							g.drawImage(img, 25 + (side * j), 25 + (side * i), 150, 150, null);
+							g.drawImage(img, IMG_LOC + (SIDE_LENGTH * j), IMG_LOC + (SIDE_LENGTH * i), IMG_WIDTH, IMG_HEIGHT, null);
 						}
 
 						else if(map[i][j] == 'i')
 						{
 							img = ImageIO.read(new File("../img/item.png"));
-							g.drawImage(img, 25 + (side * j), 25 + (side * i), 150, 150, null);
+							g.drawImage(img, IMG_LOC + (SIDE_LENGTH * j), IMG_LOC + (SIDE_LENGTH * i), IMG_WIDTH, IMG_HEIGHT, null);
 						}
 						else if(map[i][j] == 'f')
 						{
 							img = ImageIO.read(new File("../img/finish.png"));
-							g.drawImage(img, 25 + (side * j), 25 + (side * i), 150, 150, null);
+							g.drawImage(img, IMG_LOC + (SIDE_LENGTH * j), IMG_LOC + (SIDE_LENGTH * i), IMG_WIDTH, IMG_HEIGHT, null);
 						}
 					}
 
@@ -274,5 +303,66 @@ public class Map extends Rectangle
 		int x = (int)p.getX();
 		int y = (int)p.getY();
 		map[x][y] = 'n';
+	}
+}
+
+/**
+ * Tree structure to model set that is used in Kruskal to build the graph.
+ */
+class Tree
+{
+	/* Initialize parent */
+	private Tree parent = null;
+
+	/** If we are joined (not null), return root.
+	 * Else, return this object instance.
+	 */
+	public Tree root()
+	{
+		return parent != null ? parent.root() : this;
+	}
+
+	/* Validate connection to tree */
+	public boolean connected(Tree tree)
+	{
+		return this.root() == tree.root();
+	}
+
+	/* Connect to the tree */
+	public void connect(Tree tree)
+	{
+		tree.root().parent = this;
+	}
+}
+
+/**
+ * Start coordinates of edge, and direction in which it points.
+ */
+class Edge
+{
+	private int x;
+	private int y;
+	private int direction;
+
+	public Edge(int x, int y, int direction)
+	{
+		this.x = x;
+		this.y = y;
+		this.direction = direction;
+	}
+
+	public int getX()
+	{
+		return x;
+	}
+
+	public int getY()
+	{
+		return y;
+	}
+
+	public int getDirection()
+	{
+		return direction;
 	}
 }
