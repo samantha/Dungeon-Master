@@ -15,10 +15,11 @@ Outputs and takes input from mouse and keyboard (numerical keypad and arrows)
 
 ## Example
 
-Below is an example of two random 'Medium" Sudokus created and able to be solved by the program
+Below are screenshots of my earlier versions of the Dungeon Master game.
 
 ![Screenshot](./img/dungeon.png)
 
+![Screenshot](./img/dungeon_text.png)
 ## Authors
 
 Samantha Hangsan
